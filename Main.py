@@ -4,19 +4,20 @@ import cv2
 from cvzone.HandTrackingModule import HandDetector
 
 cap = cv2.VideoCapture(0)
-cap.set(3, 1280)  # Set the width of the frame
-cap.set(4, 1024)  # Set the height of the frame
+cap.set(3, 1280)  # the size frame
+cap.set(4, 1024)
 detector = HandDetector(detectionCon=0.8, maxHands=1)
 game = SnakeGameClass("donut.png")
 
 while True:
     success, img = cap.read()
 
-    if not success:
-        print("Failed to read a frame from the camera.")
+    # Check if the frame is empty
+    if not success or img is None:
+        print("Error: Could not read frame.")
         break
 
-    img = cv2.flip(img, 1)  # Flip the frame horizontally
+    img = cv2.flip(img, 1)
     hands, img = detector.findHands(img, flipType=False)
 
     if hands:
@@ -29,7 +30,6 @@ while True:
     if cv2.waitKey(1) == ord('r'):
         game.gameOver = False
         game.score = 0
-
     if cv2.waitKey(1) == ord('q'):
         break
 
